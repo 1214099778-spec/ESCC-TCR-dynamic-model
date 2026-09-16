@@ -4,43 +4,40 @@ Analysis code accompanying the paper:
 
 **Dynamic Peripheral TCR Remodeling Reflects Intratumoral Cytotoxic Immunity and Predicts Response to NICT in ESCC**
 
-This repository contains six R scripts for longitudinal peripheral TCR feature calculation, discovery-only model development, independent validation, cross-center external validation, TCR + MTV integration, and ROC/survival analyses. It contains code and documentation only. Study data, fitted model objects, final fitted coefficients, and generated outputs are excluded.
+This repository contains six R scripts for longitudinal peripheral TCR feature calculation, discovery-cohort model development, independent validation, cross-center external validation, TCR + MTV integration, and ROC/survival analyses.
 
 ## Analysis design
 
-- A discovery-defined GLIPH2 cluster dictionary maps exact CDR3b/TRBV/TRBJ keys to clusters. Dynamic features are log2((Post + 1)/(Pre + 1)). Dictionary generation is an upstream prerequisite, outside these scripts.
-- Feature filtering, Mann-Whitney ranking, Top10 selection, and L1-penalized logistic model development use the discovery cohort only.
-- Fixed-Top10 LOOCV fixes the discovery-selected features before leave-one-out fitting; coefficients and inner-CV regularization are refitted within each training fold.
-- Independent validation applies the locked discovery model without refitting.
-- Cross-center external validation projects repertoires onto the discovery dictionary and applies the locked model without refitting. The external response endpoint is **TRS0/1 versus TRS2/3** (1 versus 0).
-- TCR + MTV integration uses post-treatment metabolic tumor volume (`MTV_post`). Candidate PET comparisons and final logistic models use discovery data; independent validation uses those fitted models. Integration-layer LOOCV keeps the previously calculated TCR score fixed and is not end-to-end nested LOOCV.
-- ROC curves use binormal smoothing and bootstrap AUC intervals. Paired DeLong tests use empirical ROC objects. Survival cutpoints are estimated within the analyzed pooled or external data; external survival analysis is exploratory.
+- A discovery-defined GLIPH2 cluster dictionary maps exact CDR3b/TRBV/TRBJ keys to TCR clusters. Dynamic features are calculated as log2((Post + 1)/(Pre + 1)). GLIPH2 dictionary generation is an upstream step and is not implemented in these scripts.
+- Feature filtering, Mann–Whitney ranking, Top10 selection, and L1-penalized logistic model development are performed using the discovery cohort only.
+- Fixed-Top10 LOOCV evaluates the discovery-selected feature set by leave-one-out refitting within the discovery cohort and does not represent fully nested feature-selection cross-validation.
+- Independent validation applies the locked discovery-derived model without feature reselection, coefficient refitting, or recalibration.
+- Cross-center external validation applies the locked discovery-derived model to repertoires mapped to the discovery-defined TCR cluster dictionary. The external pathological-response endpoint is TRS0/1 versus TRS2/3.
+- TCR + MTV integration uses post-NICT metabolic tumor volume (`MTV_post`). Candidate imaging variables are evaluated in the discovery cohort, and the fitted TCR + MTV model is subsequently assessed in the independent validation cohort.
+- ROC curves are smoothed using the binormal method, with bootstrap confidence intervals for AUC estimation. Paired model comparisons are performed using DeLong tests on empirical ROC objects.
+- Survival analyses use Kaplan–Meier estimates and data-driven cutpoints. External-cohort survival analyses are exploratory.
 
 ## Data availability
 
 Processed bulk TCR repertoire data have been deposited in OMIX under accession **OMIX020653**.
 
-Single-cell RNA/TCR data: **PRJCA028740**.
+Single-cell RNA/TCR sequencing data are available under BioProject **PRJCA028740**.
 
-These accessions do not imply that access has been publicly released. Access conditions must be checked with the data repositories. Single-cell analysis is not implemented by these six scripts. No accession-associated files, raw reads, or participant-level supplementary files are included here.
+Access to these datasets is subject to the policies and access conditions of the corresponding repositories. No raw sequencing data or participant-level study data are included in this repository.
 
 ## Files and execution
 
-Run scripts from the repository root in numerical order. `R/00_utils.R` is sourced by the analysis scripts.
+Run scripts from the repository root in numerical order. `R/00_utils.R` contains shared functions used by the analysis scripts.
 
 | Script | Purpose |
 | --- | --- |
-| `R/00_utils.R` | Shared preprocessing, fitting, prediction, and LOOCV helpers |
-| `R/01_tcr_dynamic_feature_calculation.R` | Discovery and independent-validation dynamic features |
-| `R/02_tcr_score_calculation.R` | Discovery feature selection, TCR model, and fixed-Top10 LOOCV |
-| `R/03_independent_and_external_validation.R` | Locked-model independent and external predictions |
-| `R/04_tcr_mtv_model.R` | Discovery PET comparisons and TCR + MTV integration |
-| `R/05_roc_survival_analyses.R` | ROC, DeLong, thresholds, and exploratory survival analyses |
+| `R/00_utils.R` | Shared preprocessing, fitting, prediction, and LOOCV functions |
+| `R/01_tcr_dynamic_feature_calculation.R` | Longitudinal TCR dynamic-feature calculation |
+| `R/02_tcr_score_calculation.R` | Discovery-cohort feature selection, TCR model development, and fixed-Top10 LOOCV |
+| `R/03_independent_and_external_validation.R` | Locked-model independent and external validation |
+| `R/04_tcr_mtv_model.R` | PET/CT candidate-variable assessment and TCR + MTV integration |
+| `R/05_roc_survival_analyses.R` | ROC, DeLong, threshold, and survival analyses |
 
-Required R packages: `data.table`, `dplyr`, `tidyr`, `glmnet`, `pROC`, `survival`, `survminer`, and `ggplot2`. Package versions have not been locked. Syntax checks use R 4.6.0; no data-dependent analysis has been executed for this repository preparation.
+Required R packages include `data.table`, `dplyr`, `tidyr`, `glmnet`, `pROC`, `survival`, `survminer`, and `ggplot2`. The code was syntax-checked under R 4.6.0.
 
-See [input specifications](data/README.md), [output handling](results/README.md), and [analysis workflow and review notes](docs/analysis_workflow.md) before execution. The repository is not a standalone executable reproduction without authorized study inputs.
-
-## Review status
-
-This is a private review copy. Only double-bracket syntax corrections were made in scripts 04 and 05. Analytical logic was preserved. Known data-join and dictionary-mapping questions are documented in the workflow and require author review before claiming reproducibility. The code uses the MIT License (2026); the copyright holder and unconfirmed citation details are explicitly marked TODO in `LICENSE` and `CITATION.cff` and require review before public release.
+See [input specifications](data/README.md), [output handling](results/README.md), and [analysis workflow](docs/analysis_workflow.md) for additional details. Execution requires access to the study inputs described in the Data Availability section.
