@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: >-
+  TODO: Confirm the author-approved citation before scholarly use or public
+  release. This private review template contains no verified author list.
+title: "ESCC-TCR-dynamic-model: analysis code"
+type: software
+authors:
+  - name: "TODO: confirmed author list"
+license: MIT
+repository-code: "https://github.com/1214099778-spec/ESCC-TCR-dynamic-model"
+abstract: >-
+  Analysis code accompanying Dynamic Peripheral TCR Remodeling Reflects
+  Intratumoral Cytotoxic Immunity and Predicts Response to NICT in ESCC.
+  TODO: confirm manuscript authorship and bibliographic details.
+# TODO: Add a verified preferred-citation after authors approve its metadata.
+# TODO: DOI, journal, volume, issue, pages, and publication date are unconfirmed.
+# TODO: Confirm the copyright holder in LICENSE before public release.
