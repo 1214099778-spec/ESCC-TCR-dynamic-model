@@ -10,9 +10,9 @@ This repository contains six R scripts for longitudinal peripheral TCR feature c
 
 - A discovery-defined GLIPH2 cluster dictionary maps exact CDR3b/TRBV/TRBJ keys to clusters. Dynamic features are log2((Post + 1)/(Pre + 1)). Dictionary generation is an upstream prerequisite, outside these scripts.
 - Feature filtering, Mann-Whitney ranking, Top10 selection, and L1-penalized logistic model development use the discovery cohort only.
-- Fixed-Top10 LOOCV fixes the discovery-selected features before leave-one-out fitting; coefficients and inner-CV regularization are refitted within each training fold. This is not a fully nested evaluation of feature selection.
+- Fixed-Top10 LOOCV fixes the discovery-selected features before leave-one-out fitting; coefficients and inner-CV regularization are refitted within each training fold.
 - Independent validation applies the locked discovery model without refitting.
-- Cross-center external validation projects repertoires onto the discovery dictionary and applies the locked model without refitting. The external response endpoint is **TRS0/1 versus TRS2/3** (1 versus 0); the input labels must be TRS0, TRS1, TRS2, or TRS3.
+- Cross-center external validation projects repertoires onto the discovery dictionary and applies the locked model without refitting. The external response endpoint is **TRS0/1 versus TRS2/3** (1 versus 0).
 - TCR + MTV integration uses post-treatment metabolic tumor volume (`MTV_post`). Candidate PET comparisons and final logistic models use discovery data; independent validation uses those fitted models. Integration-layer LOOCV keeps the previously calculated TCR score fixed and is not end-to-end nested LOOCV.
 - ROC curves use binormal smoothing and bootstrap AUC intervals. Paired DeLong tests use empirical ROC objects. Survival cutpoints are estimated within the analyzed pooled or external data; external survival analysis is exploratory.
 
