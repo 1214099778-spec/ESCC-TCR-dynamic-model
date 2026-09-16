@@ -8,7 +8,7 @@ This repository contains six R scripts for longitudinal peripheral TCR feature c
 
 ## Analysis design
 
-- A discovery-defined GLIPH2 cluster dictionary maps exact CDR3b/TRBV/TRBJ keys to TCR clusters. Dynamic features are calculated as log2((Post + 1)/(Pre + 1)). GLIPH2 dictionary generation is an upstream step and is not implemented in these scripts.
+- A discovery-defined GLIPH2 cluster dictionary maps exact CDR3b/TRBV/TRBJ keys to TCR clusters. Dynamic features are calculated as log2((Post + 1)/(Pre + 1).
 - Feature filtering, Mann–Whitney ranking, Top10 selection, and L1-penalized logistic model development are performed using the discovery cohort only.
 - Fixed-Top10 LOOCV evaluates the discovery-selected feature set by leave-one-out refitting within the discovery cohort and does not represent fully nested feature-selection cross-validation.
 - Independent validation applies the locked discovery-derived model without feature reselection, coefficient refitting, or recalibration.
